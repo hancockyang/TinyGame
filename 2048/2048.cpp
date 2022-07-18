@@ -92,6 +92,7 @@ void printNumber(int number){
     printf("\033[%d;1m %5d\033[0m", color, number);
 }
 
+
 void printPanel(const std::vector<std::vector<int>>& panel, const int& score){
     system("cls");
     printf("A: Left, S: Down, D: Right, W: Up\n");
@@ -139,7 +140,7 @@ void move(bool isRow, bool isReverse, std::vector<std::vector<int>>& panel, int&
     auto getVals = [&] (int i, int j){
         return isRow ? panel[i][j] : panel[j][i];
     };
-    
+
     auto setVals = [&] (int i, int j) -> int& {
         return isRow ? panel[i][j] : panel[j][i];
     };
