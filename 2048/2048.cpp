@@ -6,6 +6,7 @@
 #include <memory.h>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 
 enum Direction {
@@ -106,105 +107,55 @@ void printPanel(const std::vector<std::vector<int>>& panel, const int& score){
 
 }
 
-void move(const Direction &dirs, std::vector<std::vector<int>>& panel, int& score, bool& isWon){
+void move(bool isRow, bool isReverse, std::vector<std::vector<int>>& panel, int& score, bool& isWon){
 
-    switch (dirs)
-    {
-    case LEFT:{
+    using Vec = std::vector<int>;
+    auto squeezVec = [&] (Vec& v) {
+        if (isReverse){
+            reverse(v.begin(), v.end());
+        }
+        int i = 0;
+        Vec ans;
+        while (i + 1 < v.size()){
+            if (v[i] == v[i + 1]){
+                score += v[i] * 2;
+                ans.push_back(v[i] * 2);
+                i += 2;
+            }else{
+                ans.push_back(v[i]);
+                i++;
+            }
+        }
+        if (i + 1 == v.size()){
+            ans.push_back(v[i]);
+        }
+        while (ans.size() < 4){
+            ans.push_back(0);
+        }
+
+        return isReverse ? Vec(ans.rbegin(), ans.rend()) : ans;
+    };
+
+    auto getVals = [&] (int i, int j){
+        return isRow ? panel[i][j] : panel[j][i];
+    };
+    auto setVals = [&] (int i, int j) -> int& {
+        return isRow ? panel[i][j] : panel[j][i];
+    };
+
+    for (int i = 0; i < 4; ++i){
+        Vec v;
         for (int j = 0; j < 4; ++j){
-            for (int i = 0; i < 4; ++i){
-                if (j == 0 || panel[i][j] == 0){
-                    continue;
-                }
-                int k = j;
-                while (k > 0 && panel[i][k - 1] == 0){
-                    panel[i][k - 1] = panel[i][k];
-                    panel[i][k] = 0;
-                    k--;
-                }
-                if (k > 0 && panel[i][k - 1] == panel[i][k]){
-                    panel[i][k - 1] *= 2;
-                    isWon = panel[i][k - 1] == 2048;
-                    panel[i][k] = 0;
-                    score += panel[i][k - 1];  
-                    continue;
-                }
-
+            if (getVals(i, j) > 0){
+                v.push_back(getVals(i, j));
             }
         }
-        break;
-    }
-    case UP:{
-        for (int i = 0; i < 4; ++i){
-            for (int j = 0; j < 4; ++j){
-                if (i == 0 || panel[i][j] == 0){
-                    continue;
-                }
-                int k = i;
-                while(k > 0 && panel[k - 1][j] == 0){
-                    panel[k - 1][j] = panel[k][j];
-                    panel[k][j] = 0;
-                    k--;
-                }
-                if (k > 0 && panel[k - 1][j] == panel[k][j]){
-                    panel[k - 1][j] *= 2;
-                    isWon = panel[k - 1][j] == 2048;
-                    panel[k][j] = 0;
-                    score += panel[k - 1][j];  
-                    continue;
-                }
-            }
+        auto ans = squeezVec(v);
+        for (int j = 0; j < 4; ++j){
+            setVals(i, j) = ans[j];
         }
-        break;
-    }  
-    case RIGHT:{
-        for (int j = 3; j >= 0; --j){
-            for (int i = 0; i < 4; ++i){
-                if (j == 3 || panel[i][j] == 0){
-                    continue;
-                }
-                int k = j;
-                while(k < 3 && panel[i][k + 1] == 0){
-                    panel[i][k + 1] = panel[i][k];
-                    panel[i][k] = 0;
-                    k++;
-                }
-                if (k < 3 && panel[i][k + 1] == panel[i][k]){
-                    panel[i][k + 1] *= 2;
-                    isWon = panel[i][k + 1] == 2048;
-                    panel[i][k] = 0;
-                    score += panel[i][k + 1];
-                    continue;
-                }
-            }
-        }
-        break;
     }
 
-    case DOWN:{
-        for (int i = 3; i >= 0; --i){
-            for(int j = 0; j < 4; ++j){
-                if (i == 3 || panel[i][j] == 0){
-                    continue;
-                }
-                int k = i;
-                while (k < 3 && panel[k + 1][j] == 0){
-                    panel[k + 1][j] = panel[k][j];
-                    panel[k][j] = 0;
-                    k++;
-                }
-                if (k < 3 && panel[k + 1][j] == panel[k][j]){
-                    panel[k + 1][j] *= 2;
-                    isWon = panel[k + 1][j] == 2048;
-                    panel[k][j] = 0;
-                    score += panel[k + 1][j];  
-                    continue;
-                }
-            }
-        }
-        break;
-    }
-    }
 }
 
 void play(std::vector<std::vector<int>>& panel, int& score, bool& isWon){
@@ -214,22 +165,18 @@ void play(std::vector<std::vector<int>>& panel, int& score, bool& isWon){
     switch (action)
     {
     case 'a':
-        dirs = LEFT;
+        move(true, false, panel, score, isWon);
         break;
     case 'w':
-        dirs = UP;
+        move(false, false, panel, score, isWon);
         break;
     case 'd':
-        dirs = RIGHT;
+        move(true, true, panel, score, isWon);
         break;
     case 's':
-        dirs = DOWN;
+        move(false, true, panel, score, isWon);
         break;
     }
-
-    move(dirs, panel, score, isWon);
-
-
 
 }
 
