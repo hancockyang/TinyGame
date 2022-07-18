@@ -139,6 +139,7 @@ void move(bool isRow, bool isReverse, std::vector<std::vector<int>>& panel, int&
     auto getVals = [&] (int i, int j){
         return isRow ? panel[i][j] : panel[j][i];
     };
+    
     auto setVals = [&] (int i, int j) -> int& {
         return isRow ? panel[i][j] : panel[j][i];
     };
@@ -153,6 +154,7 @@ void move(bool isRow, bool isReverse, std::vector<std::vector<int>>& panel, int&
         auto ans = squeezVec(v);
         for (int j = 0; j < 4; ++j){
             setVals(i, j) = ans[j];
+            isWon = ans[j] == 2048;
         }
     }
 
@@ -221,6 +223,7 @@ int main(){
             printf("You win\n");
             printf("Your scores: %d\n", score);
             system("pause");
+            return 0;
         }
     }
 
