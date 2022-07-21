@@ -193,7 +193,7 @@ bool isDead(const std::vector<std::vector<int>>& panel){
                 if (newI < 0 || newI == 4 || newJ < 0 || newJ == 4){
                     continue;
                 }
-                if (panel[i][j] == panel[newI][newJ]){
+                if (panel[i][j] == panel[newI][newJ] || panel[i][j] == 0 || panel[newI][newJ] == 0){
                     return false;
                 }
             }
