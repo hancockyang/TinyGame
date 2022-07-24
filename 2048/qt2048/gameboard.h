@@ -70,11 +70,6 @@ private:
 
 
 
-private:
-    std::vector<ObserverInterface2*> observers;
-
-
-
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 };

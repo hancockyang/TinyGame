@@ -1,29 +1,27 @@
 #ifndef GAME_H
 #define GAME_H
 #include <vector>
-
 class Game
 {
 public:
 
 
-    explicit Game(int);
     Game();
-    Game(int , int);
+
+    virtual void move(bool, bool) = 0;
+
+    virtual void resetGame() = 0;
+
+    virtual std::pair<int, int> getEmptyPos() const = 0;
 
     virtual ~Game();
 
-protected:
-    std::vector<std::vector<int>> board;
-
-    int total_score, NCells, goal;
+    int total_score;
     bool isWon, isLost;
 
-    void move(bool, bool);
+    int NCells, goal;
 
-    void resetGame();
-
-    std::pair<int, int> getEmptyPos() const;
+    std::vector<std::vector<int>> board;
 
 };
 

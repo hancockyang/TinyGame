@@ -26,6 +26,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    gamerule2.cpp \
+    gameruledefault.cpp \
         main.cpp \
         mainwindow.cpp \
     gameboard.cpp \
@@ -34,6 +36,8 @@ SOURCES += \
     gametoqt.cpp
 
 HEADERS += \
+    gamerule2.h \
+    gameruledefault.h \
         mainwindow.h \
     gameboard.h \
     cell.h \

@@ -16,6 +16,8 @@ public:
     //virtual void setBoard(const int, const int) const = 0;
 
     virtual ~SubjectInterface(){}
+protected:
+    std::vector<ObserverInterface*> observers;
 };
 
 
@@ -26,6 +28,11 @@ public:
     virtual void notify(const char& ) const = 0;
 
     virtual ~SubjectInterface2(){}
+
+protected:
+    std::vector<ObserverInterface2*> observers;
+
+
 };
 
 #endif // SUBJECTINTERFACE_H

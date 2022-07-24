@@ -4,13 +4,13 @@
 #include "subjectinterface.h"
 #include "observerinterface.h"
 #include "game.h"
+#include <memory>
 
-class GameToQt : protected Game, public SubjectInterface, public ObserverInterface2
+class GameToQt : public SubjectInterface, public ObserverInterface2
 {
 public:
-    explicit GameToQt(int );
-    GameToQt();
-    GameToQt(int, int);
+    explicit GameToQt(int method = 0);
+
     void init();
     //interface:
 
@@ -20,10 +20,8 @@ public:
 
     void update(const char& ) override;
 
-    //void setBoard(const int, const int) const override;
-
 private:
-    std::vector<ObserverInterface*> observers;
+    std::unique_ptr<Game> gptr;
 
 };
 
