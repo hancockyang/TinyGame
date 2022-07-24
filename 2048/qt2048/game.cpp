@@ -3,11 +3,41 @@
 #include <vector>
 #include "game.h"
 
+Game::Game():
+    board{std::vector<std::vector<int>>(4, std::vector<int>(4))},
+    total_score(0),
+    NCells(4),
+    goal(2048),
+    isWon(false),
+    isLost(false){}
 
-Game::Game():isWon(false), isLost(false), total_score(0), board{std::vector<std::vector<int>>(NCells, std::vector<int>(NCells))}{
-    resetGame();
+Game::Game(int _size):
+    board{std::vector<std::vector<int>>(_size, std::vector<int>(_size))},
+    total_score(0),
+    NCells(_size),
+    goal(2048),
+    isWon(false),
+    isLost(false) {}
+
+Game::Game(int _size, int _goal):
+    board{std::vector<std::vector<int>>(_size, std::vector<int>(_size))},
+    total_score(0),
+    NCells(_size),
+    goal(_goal),
+    isWon(false),
+    isLost(false) {}
+
+Game::~Game(){};
+
+std::pair<int, int> Game::getEmptyPos () const
+{
+    int i, j;
+    do {
+        i = rand() % NCells;
+        j = rand() % NCells;
+    } while (board[i][j]);
+    return {i, j};
 }
-
 
 void Game::resetGame(){
     for (int i = 0; i < NCells; ++i){
@@ -22,31 +52,9 @@ void Game::resetGame(){
 
     total_score = 0; isWon = false; isLost = false;
 
-    notify(total_score, board, isWon, isLost);
+
 }
 
-
-std::pair<int, int> Game::getEmptyPos () const
-{
-    int i{-1}, j{-1};
-    do {
-        i = rand() % NCells;
-        j = rand() % NCells;
-    } while (board[i][j]);
-    return {i, j};
-}
-
-bool Game::isFull () const
-{
-    for (int i = 0; i < NCells; ++i){
-        for (int j = 0; j < NCells; ++j){
-            if (board[i][j] == 0){
-                return false;
-            }
-        }
-    }
-    return true;
-}
 
 void Game::move(bool isRow, bool isReverse)
 {
@@ -66,7 +74,7 @@ void Game::move(bool isRow, bool isReverse)
             }
         }
         if (i + 1 == v.size()) ans.push_back(v[i]);
-        while (ans.size() < NCells){
+        while (ans.size() < (unsigned int)NCells){
             ans.push_back(0);
         }
         return isReverse ? Vec(ans.rbegin(), ans.rend()) : ans;
@@ -90,6 +98,37 @@ void Game::move(bool isRow, bool isReverse)
         }
     }
 
+    auto isDead = [&](){
+        std::vector<std::vector<int>> dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+        for (int i = 0; i < NCells; ++i){
+            for (int j = 0; j < NCells; ++j){
+                for (const auto& dir : dirs){
+                    int newI = i + dir[0];
+                    int newJ = j + dir[1];
+                    if (newI < 0 || newI == NCells || newJ < 0 || newJ == NCells){
+                        continue;
+                    }
+                    if (board[i][j] == board[newI][newJ] || board[i][j] == 0 || board[newI][newJ] == 0){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    };
+
+    auto isFull = [&]()
+    {
+        for (int i = 0; i < NCells; ++i){
+            for (int j = 0; j < NCells; ++j){
+                if (board[i][j] == 0){
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+
     if (!isFull() && !isWon) {
         auto pos = getEmptyPos();
         board[pos.first][pos.second] = 2;
@@ -99,59 +138,7 @@ void Game::move(bool isRow, bool isReverse)
         isLost = true;
     }
 
-    notify(total_score, board, isWon, isLost);
-}
 
-bool Game::isDead() const{
-    std::vector<std::vector<int>> dirs = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
-    for (int i = 0; i < NCells; ++i){
-        for (int j = 0; j < NCells; ++j){
-            for (const auto& dir : dirs){
-                int newI = i + dir[0];
-                int newJ = j + dir[1];
-                if (newI < 0 || newI == NCells || newJ < 0 || newJ == NCells){
-                    continue;
-                }
-                if (board[i][j] == board[newI][newJ] || board[i][j] == 0 || board[newI][newJ] == 0){
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
 }
 
 
-void Game::add(ObserverInterface *obr){
-    observers.push_back(obr);
-}
-
-
-void Game::notify(const int& total_score, const std::vector<std::vector<int>>& board, const bool& isWon, const bool& isLost) const {
-    for (const auto obr : observers){
-        obr -> update(total_score, board, isWon, isLost);
-    }
-}
-
-void Game::update(const char& ch){
-    //printf("entered %c", ch);
-    switch (ch) {
-    case 'A':
-        move(true, false);
-        break;
-    case 'S':
-        move(false, true);
-        break;
-    case 'D':
-        move(true, true);
-        break;
-    case 'W':
-        move(false, false);
-        break;
-    case 'E':
-        resetGame();
-        break;
-    default:
-        break;
-    }
-}

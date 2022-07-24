@@ -7,8 +7,7 @@
 class ObserverInterface{
 public:
     virtual void update(const int&, const std::vector<std::vector<int>>&, const bool&, const bool&) = 0;
-    //virtual void update(T, U) = 0;
-    //virtual void update(std::string& ) = 0;
+    virtual void initBoard(const int, const int) = 0;
 
     virtual ~ObserverInterface(){}
 };

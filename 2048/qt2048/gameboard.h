@@ -6,28 +6,36 @@
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QPushButton>
-#include "game.h"
+#include <QVector>
+#include "gametoqt.h"
 #include "cell.h"
 #include "observerinterface.h"
 #include "subjectinterface.h"
-#include <memory>
+
 
 
 class GameBoard : public QWidget, public ObserverInterface, public SubjectInterface2
 {
     Q_OBJECT
 public:
-    explicit GameBoard(QWidget *parent = 0);
-    ~GameBoard();
+    GameBoard();
+
+    explicit GameBoard(QWidget *parent);
+
+    GameBoard(QWidget *parent, int _NCells);
+
+    void update(const int&, const std::vector<std::vector<int>>&, const bool&, const bool& ) override;
+
+    void add(ObserverInterface2*) override;
+
+    void notify(const char&) const override;
+
+    void initBoard(const int, const int) override;
 
 private:
     // main game logic
-    //Game game;
 
-    //std::unique_ptr<ObserverInterface2> game = std::make_unique<Game>();
-    Game* game;
 
-    Cell *cells[NCells][NCells] {};
 
     // main layout
     QVBoxLayout *mainLayout;
@@ -44,27 +52,31 @@ private:
     // score widget
     QLabel *score;
 
+    // instruction widget
+    QLabel *instruction;
+
     bool isWon, isLost;
 
-    void drawBoard(const std::vector<std::vector<int>>& );
+    int NCells, gamegoal;
 
-    void drawStatus();
+    QVector<QVector<Cell*>> cells;
+
+    void drawBoard();
 
     void resetGame();
+    void init();
 
 // interface
 
-    void update(const int&, const std::vector<std::vector<int>>&, const bool&, const bool& ) override;
 
-    void add(ObserverInterface2*) override;
-
-    void notify(const char&) const override;
 
 private:
     std::vector<ObserverInterface2*> observers;
 
+
+
 protected:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
 };
 
 

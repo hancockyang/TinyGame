@@ -3,70 +3,75 @@
 #include "utility.h"
 #include <cstdlib>
 
-GameBoard::~GameBoard(){
-    delete game;
-}
-
-GameBoard::GameBoard(QWidget *parent) : QWidget(parent), isWon(false), isLost(false)
+GameBoard::GameBoard() :
+    QWidget(0),
+    isWon(false),
+    isLost(false)
 {
-    // set default size
-    resize(650, 450);
+    init();
+}
 
-    // create the main layout
-    mainLayout = new QVBoxLayout(this);
-    setLayout(mainLayout);
 
-    game = new Game();
-    game->add(this);
-    add(game);
-
-    boardLayout = new QGridLayout();
-    drawBoard(game->board);
-
-    drawStatus();
-
-    setStyleSheet("GameBoard { background-color: rgb(187,173,160) }");
+GameBoard::GameBoard(QWidget *parent) :
+    QWidget(parent),
+    isWon(false),
+    isLost(false)
+{
+    init();
 }
 
 
 
+void GameBoard::init(){
+     resize(650, 500);
 
-void GameBoard::drawBoard(const std::vector<std::vector<int>>& panel){
+
+     mainLayout = new QVBoxLayout(this);
+     setLayout(mainLayout);
+
+
+     boardLayout = new QGridLayout();
+
+     setStyleSheet("GameBoard { background-color: rgb(187,173,160) }");
+
+
+
+
+     statusLayout = new QHBoxLayout();
+    // create the score widget and add it to the board
+
+     score = new QLabel(QString("SCORE: 0"));
+     score->setStyleSheet("QLabel { color: rgb(235,224,214); font: 16pt; }");
+     score->setFixedHeight(50);
+     statusLayout->insertWidget(0, score, 0, Qt::AlignLeft);
+
+
+     resetBtn = new QPushButton(QString("RESET"));
+     resetBtn -> setStyleSheet("resetBtn {background-color: rgb(187,173,160); color: rgb(235,224,214); font: 16pt; }");
+     resetBtn -> setFixedSize(80, 50);
+     statusLayout -> insertWidget(1, resetBtn, 0, Qt::AlignRight);
+
+
+     connect(resetBtn, &QPushButton::clicked, this, &GameBoard::resetGame);
+
+     mainLayout ->insertLayout(2, statusLayout);
+
+}
+
+
+void GameBoard::drawBoard(){
 
     delete boardLayout;
     boardLayout = new QGridLayout();
     for (int i = 0; i < NCells; ++i) {
         for (int j = 0; j < NCells; ++j) {
-            delete cells[i][j];
-            cells[i][j] = new Cell(panel[i][j]);
             boardLayout->addWidget(cells[i][j], i, j);
             cells[i][j]->draw();
         }
     }
-    mainLayout->insertLayout(0, boardLayout);
+    mainLayout->insertLayout(1, boardLayout);
 }
 
-void GameBoard::drawStatus(){
-    //delete statusLayout;
-    statusLayout = new QHBoxLayout();
-    //    // create the score widget and add it to the board
-    //delete score;
-    score = new QLabel(QString("SCORE: 0"));
-    score->setStyleSheet("QLabel { color: rgb(235,224,214); font: 16pt; }");
-    score->setFixedHeight(50);
-    statusLayout->insertWidget(0, score, 0, Qt::AlignLeft);
-
-    //delete resetBtn;
-    resetBtn = new QPushButton(QString("RESET"));
-    resetBtn -> setStyleSheet("resetBtn {background-color: rgb(187,173,160); color: rgb(235,224,214); font: 16pt; }");
-    resetBtn -> setFixedSize(80, 50);
-    statusLayout -> insertWidget(1, resetBtn, 0, Qt::AlignRight);
-
-
-    connect(resetBtn, &QPushButton::clicked, this, &GameBoard::resetGame);
-
-    mainLayout ->insertLayout(1, statusLayout);
-}
 
 void GameBoard::keyPressEvent(QKeyEvent *event)
 {
@@ -107,13 +112,19 @@ void GameBoard::keyPressEvent(QKeyEvent *event)
 void GameBoard::resetGame(){
     char ch = 'E';
     notify(ch);
-    //game->resetGame();
 }
 
 void GameBoard::update(const int& gamescore, const std::vector<std::vector<int>>& panel, const bool& _isWon, const bool& _isLost) {
 
     score->setText(QString("SCORE: %1").arg(gamescore));
-    drawBoard(panel);
+
+    for (int i = 0; i < NCells; ++i) {
+        for (int j = 0; j < NCells; ++j) {
+            delete cells[i][j];
+            cells[i][j] = new Cell(panel[i][j]);
+        }
+    }
+    drawBoard();
     isWon = _isWon;
     isLost = _isLost;
 }
@@ -126,4 +137,14 @@ void GameBoard::notify(const char& ch) const{
     for (const auto& obr : observers){
         obr -> update(ch);
     }
+}
+
+void GameBoard::initBoard(const int _NCells, const int _gamegoal){
+    NCells = _NCells;
+    gamegoal = _gamegoal;
+    cells = QVector<QVector<Cell*>>(NCells, QVector<Cell*>(NCells));
+    instruction = new QLabel(QString("UP: W, DOWN: S, LEFT: A, RIGHT: D.   GOAL: %1").arg(gamegoal));
+    instruction->setStyleSheet("QLabel { color: rgb(235,224,214); font: 16pt; }");
+    instruction->setFixedHeight(50);
+    mainLayout ->insertWidget(0, instruction, 0, Qt::AlignLeft);
 }

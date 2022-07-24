@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++14
+CONFIG += c++17
 
 TARGET = qt2048
 TEMPLATE = app
@@ -30,7 +30,8 @@ SOURCES += \
         mainwindow.cpp \
     gameboard.cpp \
     cell.cpp \
-    game.cpp
+    game.cpp \
+    gametoqt.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,4 +39,5 @@ HEADERS += \
     cell.h \
     game.h \
     subjectinterface.h \
-    observerinterface.h
+    observerinterface.h \
+    gametoqt.h
