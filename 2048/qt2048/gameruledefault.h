@@ -1,9 +1,9 @@
 #ifndef GAMERULEDEFAULT_H
 #define GAMERULEDEFAULT_H
 
-#include "game.h"
+#include "gameinterface.h"
 
-class GameRuleDefault : public Game
+class GameRuleDefault : public GameInterface
 {
 public:
     GameRuleDefault();

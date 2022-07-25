@@ -3,7 +3,7 @@
 #include <cstring>
 #include <vector>
 
-GameRule2::GameRule2() : Game()
+GameRule2::GameRule2() : GameInterface()
 {
     NCells = 6;
     board = std::vector<std::vector<int>>(6, std::vector<int>(6));
@@ -33,7 +33,7 @@ void GameRule2::resetGame(){
     total_score = 0; isWon = false; isLost = false;
 }
 
-void GameRule2::move(bool isRow, bool isReverse){
+void GameRule2::move(bool isRow, bool isReverse) {
     using Vec = std::vector<int>;
     auto squeezeVec = [&] (Vec& v) {
         if (isReverse) v = Vec(v.rbegin(), v.rend());
@@ -41,7 +41,7 @@ void GameRule2::move(bool isRow, bool isReverse){
         while (i + 1 < v.size()) {
             if (v[i] == v[i + 1]) {
                 total_score += v[i] * 2;
-                isWon = (total_score >= goal);
+                isWon = (v[i] * 2 == goal);
                 ans.push_back(v[i] * 2);
                 i += 2;
             }

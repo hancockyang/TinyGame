@@ -1,20 +1,7 @@
 #include "gametoqt.h"
 #include "gameruledefault.h"
 #include "gamerule2.h"
-GameToQt::GameToQt(int method){
-    switch (method) {
-    case 1:
-        gptr = std::make_unique<GameRuleDefault>();
-        break;
-    case 2:
-        gptr = std::make_unique<GameRule2>();
-        break;
-    default:
-        gptr = std::make_unique<GameRuleDefault>();
-        break;
-    }
-
-}
+GameToQt::GameToQt(std::unique_ptr<GameInterface> gameRule): gptr(std::move(gameRule)){}
 
 void GameToQt::add(ObserverInterface *obr){
     observers.push_back(obr);

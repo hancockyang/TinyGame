@@ -1,12 +1,12 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAMEINTERFACE_H
+#define GAMEINTERFACE_H
 #include <vector>
-class Game
+class GameInterface
 {
 public:
 
 
-    Game();
+    GameInterface();
 
     virtual void move(bool, bool) = 0;
 
@@ -14,7 +14,7 @@ public:
 
     virtual std::pair<int, int> getEmptyPos() const = 0;
 
-    virtual ~Game();
+    virtual ~GameInterface();
 
     int total_score;
     bool isWon, isLost;
@@ -26,4 +26,4 @@ public:
 };
 
 
-#endif // GAME_H
+#endif // GAMEINTERFACE_H

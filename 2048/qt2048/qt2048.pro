@@ -26,22 +26,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
+    gameinterface.cpp \
     gamerule2.cpp \
     gameruledefault.cpp \
         main.cpp \
         mainwindow.cpp \
     gameboard.cpp \
     cell.cpp \
-    game.cpp \
     gametoqt.cpp
 
 HEADERS += \
+    gameinterface.h \
     gamerule2.h \
     gameruledefault.h \
         mainwindow.h \
     gameboard.h \
     cell.h \
-    game.h \
     subjectinterface.h \
     observerinterface.h \
     gametoqt.h

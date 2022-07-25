@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <cstring>
 #include <vector>
-#include "game.h"
+#include "gameinterface.h"
 
-Game::Game():
+GameInterface::GameInterface():
     total_score(0),
     isWon(false),
     isLost(false),
@@ -13,6 +13,6 @@ Game::Game():
 
 
 
-Game::~Game(){};
+GameInterface::~GameInterface(){};
 
 

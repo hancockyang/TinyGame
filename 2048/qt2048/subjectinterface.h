@@ -2,8 +2,6 @@
 #define SUBJECTINTERFACE_H
 
 #include <vector>
-
-#include <memory>
 #include "observerinterface.h"
 
 

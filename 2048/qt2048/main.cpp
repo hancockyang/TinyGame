@@ -1,6 +1,8 @@
 // main.cpp
 #include <QApplication>
 #include "gameboard.h"
+#include "gameruledefault.h"
+#include "gamerule2.h"
 
 int main(int argc, char *argv[])
 {
@@ -9,7 +11,8 @@ int main(int argc, char *argv[])
     srand(time(NULL));
 
     GameBoard *board = new GameBoard();
-    GameToQt *game = new GameToQt();
+    std::unique_ptr<GameInterface> gameRule1 = std::make_unique<GameRuleDefault>();
+    GameToQt *game = new GameToQt(std::move(gameRule1));
     game -> add(board);
     board -> add(game);
     game -> update('E');

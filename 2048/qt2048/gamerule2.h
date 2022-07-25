@@ -1,9 +1,9 @@
 #ifndef GAMERULE2_H
 #define GAMERULE2_H
 
-#include "game.h"
+#include "gameinterface.h"
 
-class GameRule2 : public Game
+class GameRule2 : public GameInterface
 {
 public:
     GameRule2();

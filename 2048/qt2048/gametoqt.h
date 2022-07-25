@@ -3,13 +3,13 @@
 
 #include "subjectinterface.h"
 #include "observerinterface.h"
-#include "game.h"
+#include "gameinterface.h"
 #include <memory>
 
 class GameToQt : public SubjectInterface, public ObserverInterface2
 {
 public:
-    explicit GameToQt(int method = 0);
+    explicit GameToQt(std::unique_ptr<GameInterface>);
 
     void init();
     //interface:
@@ -21,7 +21,7 @@ public:
     void update(const char& ) override;
 
 private:
-    std::unique_ptr<Game> gptr;
+    std::unique_ptr<GameInterface> gptr;
 
 };
 

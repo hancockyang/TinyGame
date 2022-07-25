@@ -1,6 +1,5 @@
 #include "gameboard.h"
 #include "cell.h"
-#include "utility.h"
 #include <cstdlib>
 
 GameBoard::GameBoard() :
@@ -104,7 +103,14 @@ void GameBoard::keyPressEvent(QKeyEvent *event)
         break;
     }
 
+
     notify(ch);
+    if (isWon){
+        score->setText(QString("You Won"));
+    }
+    if (isLost){
+        score->setText(QString("You Lost"));
+    }
 
 }
 

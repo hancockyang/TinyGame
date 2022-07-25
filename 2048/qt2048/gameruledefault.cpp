@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cstring>
 #include <vector>
-GameRuleDefault::GameRuleDefault() : Game(){};
+GameRuleDefault::GameRuleDefault() : GameInterface(){};
 
 
 std::pair<int, int> GameRuleDefault::getEmptyPos () const
@@ -37,7 +37,7 @@ void GameRuleDefault::move(bool isRow, bool isReverse){
         while (i + 1 < v.size()) {
             if (v[i] == v[i + 1]) {
                 total_score += v[i] * 2;
-                isWon = (total_score >= goal);
+                isWon = (v[i] * 2 == goal);
                 ans.push_back(v[i] * 2);
                 i += 2;
             }
