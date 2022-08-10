@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "observerinterface.h"
-
+#include <memory>
 
 class SubjectInterface{
 public:
@@ -21,14 +21,14 @@ protected:
 
 class SubjectInterface2{
 public:
-    virtual void add(ObserverInterface2*) = 0;
+    virtual void add(std::shared_ptr<ObserverInterface2>) = 0;
 
     virtual void notify(const char& ) const = 0;
 
     virtual ~SubjectInterface2(){}
 
 protected:
-    std::vector<ObserverInterface2*> observers;
+    std::vector<std::shared_ptr<ObserverInterface2>> observers;
 
 
 };

@@ -26,7 +26,7 @@ public:
 
     void update(const int&, const std::vector<std::vector<int>>&, const bool&, const bool& ) override;
 
-    void add(ObserverInterface2*) override;
+    void add(std::shared_ptr<ObserverInterface2>) override;
 
     void notify(const char&) const override;
 

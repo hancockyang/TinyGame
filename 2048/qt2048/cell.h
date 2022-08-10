@@ -9,11 +9,11 @@ class Cell : public QLabel
     Q_OBJECT
 public:
     Cell(int _value);
-
+    int value;
     void draw();
 private:
 
-    int value;
+
 };
 
 #endif // CELL_H

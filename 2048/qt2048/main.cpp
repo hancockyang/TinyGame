@@ -12,18 +12,19 @@ int main(int argc, char *argv[])
 
     GameBoard *board = new GameBoard();
     std::unique_ptr<GameInterface> gameRule1 = std::make_unique<GameRuleDefault>();
-    GameToQt *game = new GameToQt(std::move(gameRule1));
+    std::shared_ptr<GameToQt> game = std::make_shared<GameToQt>(std::move(gameRule1));
+
+    std::shared_ptr<ObserverInterface2> sptr2 = game;
+    //GameToQt *game = new GameToQt(std::move(gameRule1));
     game -> add(board);
-    board -> add(game);
+
+    board -> add(sptr2);
     game -> update('E');
     board -> show();
 
-    app.exec();
 
-    delete game;
-    game = nullptr;
 
-    return 0;
+    return app.exec();
 }
 
 

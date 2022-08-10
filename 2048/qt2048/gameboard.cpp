@@ -33,7 +33,7 @@ void GameBoard::init(){
 
      setStyleSheet("GameBoard { background-color: rgb(187,173,160) }");
 
-
+     mainLayout->insertLayout(1, boardLayout);
 
 
      statusLayout = new QHBoxLayout();
@@ -60,15 +60,14 @@ void GameBoard::init(){
 
 void GameBoard::drawBoard(){
 
-    delete boardLayout;
-    boardLayout = new QGridLayout();
+
     for (int i = 0; i < NCells; ++i) {
         for (int j = 0; j < NCells; ++j) {
             boardLayout->addWidget(cells[i][j], i, j);
             cells[i][j]->draw();
         }
     }
-    mainLayout->insertLayout(1, boardLayout);
+
 }
 
 
@@ -126,8 +125,7 @@ void GameBoard::update(const int& gamescore, const std::vector<std::vector<int>>
 
     for (int i = 0; i < NCells; ++i) {
         for (int j = 0; j < NCells; ++j) {
-            delete cells[i][j];
-            cells[i][j] = new Cell(panel[i][j]);
+            cells[i][j] -> value = panel[i][j];
         }
     }
     drawBoard();
@@ -135,7 +133,7 @@ void GameBoard::update(const int& gamescore, const std::vector<std::vector<int>>
     isLost = _isLost;
 }
 
-void GameBoard::add(ObserverInterface2* obr){
+void GameBoard::add(std::shared_ptr<ObserverInterface2> obr){
     observers.push_back(obr);
 }
 
@@ -149,6 +147,12 @@ void GameBoard::initBoard(const int _NCells, const int _gamegoal){
     NCells = _NCells;
     gamegoal = _gamegoal;
     cells = QVector<QVector<Cell*>>(NCells, QVector<Cell*>(NCells));
+    for (int i = 0; i < NCells; ++i) {
+        for (int j = 0; j < NCells; ++j) {
+            cells[i][j] = new Cell(0);
+
+        }
+    }
     instruction = new QLabel(QString("UP: W, DOWN: S, LEFT: A, RIGHT: D.   GOAL: %1").arg(gamegoal));
     instruction->setStyleSheet("QLabel { color: rgb(235,224,214); font: 16pt; }");
     instruction->setFixedHeight(50);
